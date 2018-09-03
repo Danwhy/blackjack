@@ -24,13 +24,40 @@ defmodule Blackjack.Game do
 
   @spec sum_hand(Deck.hand()) :: pos_integer()
   def sum_hand(hand) do
-    hand
-    |> Enum.reduce(0, fn ({v, _s}, acc) ->
-      acc + case v do
-        f when f in ["K", "Q", "J"] -> 10
-        "A" -> 11
-        int -> String.to_integer(int)
+    parsed_hand =
+      Enum.map(hand, fn {v, _} ->
+        case v do
+          "A" -> [1, 11]
+          c when c in ["J", "Q", "K"] -> 10
+          c -> String.to_integer(c)
+        end
+      end)
+
+    without_aces = sum_numbers_from_list(parsed_hand)
+
+    aces = Enum.filter(parsed_hand, &is_list(&1))
+
+    if length(aces) > 0 do
+      without_aces =
+        cond do
+          length(aces) > 1 -> without_aces + (length(aces) - 1)
+          true -> without_aces
+        end
+
+      cond do
+        without_aces + 11 > 21 -> without_aces + 1
+        true -> without_aces + 11
       end
+    else
+      without_aces
+    end
+  end
+
+  @spec sum_numbers_from_list(list) :: integer()
+  defp sum_numbers_from_list(list) when is_list(list) do
+    Enum.reduce(list, 0, fn
+      a, acc when is_integer(a) -> acc + a
+      _a, acc -> acc
     end)
   end
 end
