@@ -13,6 +13,13 @@ defmodule GameTest do
     assert length(deck) == 49
   end
 
+  test "Cannot hit when bust" do
+    deck = Deck.create_deck()
+    hand = [{"10", :clubs}, {"10", :spades}, {"5", :hearts}]
+
+    assert Game.hit(deck, hand) == {:error, "already bust"}
+  end
+
   test "compare hands" do
     hand_1 = [{"2", :clubs}, {"5", :hearts}]
     hand_2 = [{"1", :spades}, {"8", :hearts}]

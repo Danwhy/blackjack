@@ -3,10 +3,12 @@ defmodule Blackjack.Game do
 
   @spec hit(Deck.deck(), Deck.hand()) :: {Deck.deck(), Deck.hand()}
   def hit(deck, hand) do
-    with {card, deck} when not is_nil(card) <- List.pop_at(deck, 0) do
+    with sum when sum <= 21 <- sum_hand(hand),
+         {card, deck} when not is_nil(card) <- List.pop_at(deck, 0) do
       {deck, hand ++ [card]}
     else
-      {nil, []} -> {[], hand}
+      n when is_integer(n) -> {:error, "already bust"}
+      {nil, []} -> {:error, "deck is empty"}
     end
   end
 
