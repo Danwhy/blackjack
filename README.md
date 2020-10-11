@@ -1,21 +1,23 @@
 # Blackjack
 
-**TODO: Add description**
-
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `blackjack` to your list of dependencies in `mix.exs`:
+## Instructions
 
 ```elixir
-def deps do
-  [
-    {:blackjack, "~> 0.1.0"}
-  ]
-end
+iex -S mix
+
+# Start a new table
+{:ok, pid} = Blackjack.Table.start_link
+# {:ok, #PID<0.180.0>}
+
+# Add a player to the table
+{:ok, player_id} = Blackjack.Table.join(pid)
+# {:ok, #PID<0.182.0>}
+
+# Deal a hand to all players
+Blackjack.Table.deal(pid)
+# :ok
+
+# View a player's hand
+Blackjack.Player.view_hand(player_id)
+# [{"Q", :spades}, {"3", :hearts}]
 ```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/blackjack](https://hexdocs.pm/blackjack).
-
